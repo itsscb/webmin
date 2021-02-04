@@ -24,7 +24,7 @@
     </nav>
     <div style="color: rgb(255,255,255);background: rgb(0,0,0);">
         <div class="container" style="margin-bottom: 5rem;">
-            <form style="color: rgb(255,255,255);"><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Username" name="username">
+            <form style="color: rgb(255,255,255);"><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Username" name="username" value="{{ .username }}">
                 <div class="d-flex flex-wrap justify-content-xl-center">
                     <div style="margin: 1rem;">
                         <h4 class="text-center" style="margin-top: 1rem;">Account-Tools</h4>
@@ -45,7 +45,7 @@
                     </div>
                 </div><button class="btn btn-primary" type="submit" style="margin-top: 2rem;width: 100%;background: rgb(37,82,1);border-color: rgb(37,82,1);">Submit</button>
             </form>
-            <form><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Hostname" name="hostname">
+            <form><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Hostname" name="hostname" value="{{ .hostname }}">
                 <div class="d-flex flex-wrap justify-content-xl-center">
                     <div style="margin: 1rem;">
                         <h4 class="text-center" style="margin-top: 1rem;">Remote-Support</h4>

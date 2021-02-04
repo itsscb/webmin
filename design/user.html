@@ -23,7 +23,7 @@
         </div>
     </nav>
     <div class="container" style="color: rgb(255,255,255);margin-bottom: 5rem;">
-        <form style="color: rgb(255,255,255);"><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Username" name="username">
+        <form style="color: rgb(255,255,255);"><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Username" name="username" value="{{ .username }}">
             <div class="d-flex flex-wrap justify-content-xl-center">
                 <div style="margin: 1rem;">
                     <h4 class="text-center" style="margin-top: 1rem;">Account-Tools</h4>
@@ -79,6 +79,12 @@
                 <div>
                     <h5>Last Logon</h5>
                     <p>{{ .LastLogonDate }}</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>Last bad Password</h5>
+                    <p>{{ .LastBadPasswordAttempt }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
