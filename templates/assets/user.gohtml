@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>webmin</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body style="background: rgb(0,0,0);">
+    <div style="color: rgb(255,255,255);background: rgb(0,0,0);">
+        <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="color: rgb(255,255,255);background: rgb(0,0,0);">
+            <div class="container"><a class="navbar-brand" href="#" style="font-size: 30px;">webmin</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.gohtml" style="color: rgb(255,255,255);">Start</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <form method=POST><input class="form-control" type="text" value="{{.SamAccountName}}" name="username" style="margin-top: 2rem;">
+                <h6 style="margin-top: 1rem;">Account-Tools</h6>
+                <div class="d-flex flex-wrap">
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-1" name="ResetPW"><label class="form-check-label" for="UserForm">Reset Password</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-7" name="UnlockAcc"><label class="form-check-label" for="UserForm">Unlock Account</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-2" name="ShowPerm"><label class="form-check-label" for="UserForm">Show Permissions</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-15" name="ExtExp"><label class="form-check-label" for="UserForm">Extend Expirationdate</label></div>
+                </div>
+                <h6 style="margin-top: 1rem;">BitLocker</h6>
+                <div class="d-flex flex-wrap">
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-6" name="UserForm"><label class="form-check-label" for="UserForm">Suspend BitLocker</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-5" name="UserForm"><label class="form-check-label" for="UserForm">Query BitLocker-RecoveryKey</label></div>
+                </div>
+                <h6 style="margin-top: 1rem;">DSM</h6>
+                <div class="d-flex flex-wrap">
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-3" name="UserForm"><label class="form-check-label" for="UserForm">Add DSM-Package(s)</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-4" name="UserForm"><label class="form-check-label" for="UserForm">Remove DSM-Package(s)</label></div>
+                </div><button class="btn btn-primary" type="submit" style="margin-top: 2rem;">Submit</button>
+            </form>
+        <div class="container">
+            {{ range $key, $value := . }}
+                <li><strong>{{ $key }}</strong>: {{ $value }}</li>
+            {{ end }}
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
