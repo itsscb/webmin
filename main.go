@@ -7,7 +7,9 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
+	"strconv"
 	"text/template"
+	"time"
 )
 
 var tpl *template.Template
@@ -60,6 +62,13 @@ func pget(p *PowerShell, c string, q string, props string) map[string]interface{
 	return resp
 }
 
+func pt2str(i interface{}) string {
+	tmp := i.(string)[6 : len(i.(string))-5]
+	ti, _ := strconv.Atoi(tmp)
+	t := time.Unix(int64(ti), 0)
+	return t.Format("02.01.2006 15:04")
+}
+
 func sfbs(w http.ResponseWriter, req *http.Request) {
 	http.ServeFile(w, req, "templates/assets/bootstrap/css/bootstrap.min.css")
 }
@@ -95,7 +104,20 @@ func index(w http.ResponseWriter, req *http.Request) {
 
 	posh := new()
 	user := req.FormValue("username")
+	/*
+		err := req.ParseForm()
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			log.Fatalln(err)
+		}
 
+		for key, values := range req.Form {
+			fmt.Println(key, values)
+			for _, value := range values {
+				fmt.Println(key, value)
+			}
+		}
+	*/
 	/*
 		rpw := req.FormValue("ResetPW")
 		if rpw == "on" {
@@ -126,10 +148,26 @@ func index(w http.ResponseWriter, req *http.Request) {
 		}
 		fmt.Println(stdErr, stdOut)
 	*/
-	fmt.Println("Getting Userdata of ", user, "...")
 	userdata := pget(posh, "Get-ADUser", user, "DisplayName, Department, SamAccountName, Enabled, LockedOut, PasswordExpired, PasswordNeverExpires, PasswordNotRequired, CannotChangePassword, PasswordLastSet, LastBadPasswordAttempt, LastLogonDate, AccountExpirationDate, extensionAttribute13, EmailAddress, Homedirectory")
-	fmt.Println("Got Userdata")
-	fmt.Println(userdata)
+	userdata["username"] = user
+	if userdata["LastLogonDate"] != nil {
+		userdata["LastLogonDate"] = pt2str(userdata["LastLogonDate"])
+		fmt.Println("\nLastLogonDate:", userdata["LastLogonDate"])
+	} else {
+		userdata["LastLogonDate"] = "None"
+	}
+	if userdata["PasswordLastSet"] != nil {
+		userdata["PasswordLastSet"] = pt2str(userdata["PasswordLastSet"])
+		fmt.Println("\nPasswordLastSet:", userdata["PasswordLastSet"])
+	} else {
+		userdata["PasswordLastSet"] = "None"
+	}
+	if userdata["AccountExpirationDate"] != nil {
+		userdata["AccountExpirationDate"] = pt2str(userdata["AccountExpirationDate"])
+		fmt.Println("\nAccountExpirationDate:", userdata["AccountExpirationDate"])
+	} else {
+		userdata["AccountExpirationDate"] = "None"
+	}
 	err := tpl.ExecuteTemplate(w, "user.gohtml", userdata) //incident{h, u, stdOut})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -141,21 +179,6 @@ func user(w http.ResponseWriter, req *http.Request) {
 	posh := new()
 	user := req.FormValue("username")
 
-	/*
-		rpw := req.FormValue("ResetPW")
-		if rpw == "on" {
-			fmt.Println("rpw", rpw)
-		} else {
-			fmt.Println("rpw off")
-		}
-		uacc := req.FormValue("UnlockAcc")
-		fmt.Println(uacc)
-		sprm := req.FormValue("ShowPrm")
-		fmt.Println(sprm)
-		exe := req.FormValue("ExtExp")
-		fmt.Println(exe)
-	*/
-
 	if user == "" {
 		err := tpl.ExecuteTemplate(w, "user.gohtml", em)
 		if err != nil {
@@ -164,17 +187,28 @@ func user(w http.ResponseWriter, req *http.Request) {
 		}
 		return
 	}
-	/*
-		stdOut, stdErr, err := posh.execute("Test-Connection", "-Count", "1", "-Quiet", h)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		fmt.Println(stdErr, stdOut)
-	*/
+
 	fmt.Println("Getting Userdata of ", user, "...")
-	userdata := pget(posh, "Get-ADUser", user, "DisplayName, Department, SamAccountName, Enabled, LockedOut, PasswordExpired, PasswordNeverExpires, PasswordNotRequired, CannotChangePassword, PasswordLastSet, LastBadPasswordAttempt, LastLogonDate, AccountExpirationDate, extensionAttribute13, EmailAddress, Homedirectory")
-	fmt.Println("Got Userdata")
-	fmt.Println(userdata)
+	userdata := pget(posh, "Get-ADUser", user, "DisplayName, Department, SamAccountName, Enabled, LockedOut, PasswordExpired, PasswordLastSet, LastBadPasswordAttempt, LastLogonDate, AccountExpirationDate, extensionAttribute13, EmailAddress, Homedirectory")
+	userdata["username"] = user
+	if userdata["LastLogonDate"] != nil {
+		userdata["LastLogonDate"] = pt2str(userdata["LastLogonDate"])
+		fmt.Println("\nLastLogonDate:", userdata["LastLogonDate"])
+	} else {
+		userdata["LastLogonDate"] = "None"
+	}
+	if userdata["PasswordLastSet"] != nil {
+		userdata["PasswordLastSet"] = pt2str(userdata["PasswordLastSet"])
+		fmt.Println("\nPasswordLastSet:", userdata["PasswordLastSet"])
+	} else {
+		userdata["PasswordLastSet"] = "None"
+	}
+	if userdata["AccountExpirationDate"] != nil {
+		userdata["AccountExpirationDate"] = pt2str(userdata["AccountExpirationDate"])
+		fmt.Println("\nAccountExpirationDate:", userdata["AccountExpirationDate"])
+	} else {
+		userdata["AccountExpirationDate"] = "None"
+	}
 	err := tpl.ExecuteTemplate(w, "user.gohtml", userdata) //incident{h, u, stdOut})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
