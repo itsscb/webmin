@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="background: #000000;border-color: rgb(255,255,255);">
 
 <head>
     <meta charset="utf-8">
@@ -11,20 +11,95 @@
 </head>
 
 <body style="background: rgb(0,0,0);">
-    <div style="color: rgb(255,255,255);background: rgb(0,0,0);">
-        <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="color: rgb(255,255,255);background: rgb(0,0,0);">
-            <div class="container"><a class="navbar-brand" href="#" style="font-size: 30px;">webmin</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navcol-1">
-                    <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="index.html" style="color: rgb(255,255,255);">Start</a></li>
-                    </ul>
-                </div>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="color: rgb(255,255,255);background: rgb(0,0,0);">
+        <div class="container"><a class="navbar-brand" href="#" style="font-size: 30px;">webmin</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="user.gohtml" style="color: rgb(255,255,255);">User</a></li>
+                    <li class="nav-item"><a class="nav-link" href="computer.gohtml" style="color: rgb(255,255,255);">Computer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.gohtml" style="color: rgb(255,255,255);">Start</a></li>
+                </ul>
             </div>
-        </nav>
-        <div class="container">
-            <h3>Heading</h3>
-            <p>Paragraph</p>
         </div>
+    </nav>
+    <div class="container" style="color: rgb(255,255,255);margin-bottom: 5rem;">
+        <form><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Hostname">
+            <div class="d-flex flex-wrap justify-content-xl-center">
+                <div style="margin: 1rem;">
+                    <h4 class="text-center" style="margin-top: 1rem;">Remote-Support</h4>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-16" name="HostForm" value="StartRS"><label class="form-check-label" for="UserForm">Start Remotesupport</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-17" name="HostForm" value="StartRDP"><label class="form-check-label" for="UserForm">Start RDP-Session</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-18" name="HostForm" value="ManufacturerWebsite"><label class="form-check-label" for="UserForm">Manufacturer Website</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-1" name="HostForm" value="ChkWU"><label class="form-check-label" for="UserForm">Check Windows Updates</label></div>
+                </div>
+                <div style="margin: 1rem;">
+                    <h4 class="text-center" style="margin-top: 1rem;">BitLocker</h4>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-20" name="HostForm" value="SuspBL"><label class="form-check-label" for="UserForm">Suspend BitLocker</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-21" name="HostForm" value="QuBL"><label class="form-check-label" for="UserForm">Query BitLocker-RecoveryKey</label></div>
+                </div>
+                <div style="margin: 1rem;">
+                    <h4 class="text-center" style="margin-top: 1rem;">DSM</h4>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-22" name="HostForm" value="AddDSM"><label class="form-check-label" for="UserForm">Add DSM-Package(s)</label></div>
+                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-23" name="HostForm" value="RmDSM"><label class="form-check-label" for="UserForm">Remove DSM-Package(s)</label></div>
+                </div>
+            </div><button class="btn btn-primary" type="submit" style="margin-top: 2rem;width: 100%;background: rgb(37,82,1);border-color: rgb(37,82,1);">Submit Hostname</button>
+        </form>
+        <ul class="list-unstyled d-flex justify-content-center flex-wrap justify-content-xl-center" style="margin: 2rem;">
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>Name</h5>
+                    <p>LWENB1113</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>Manufacturer</h5>
+                    <p>Dell</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>End of Warranty</h5>
+                    <p>31.12.2022</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>Last seen</h5>
+                    <p>01.01.2021</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>Last User</h5>
+                    <p>lwescbg</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>BIOS Version</h5>
+                    <p>1.19.1</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>Department</h5>
+                    <p>ORG</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>Belongs to IT</h5>
+                    <p>ORG</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>VPN-User</h5>
+                    <p>true</p>
+                </div>
+            </li>
+        </ul>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="background: #000000;">
 
 <head>
     <meta charset="utf-8">
@@ -10,54 +10,60 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
-<body>
-    <div style="color: rgb(255,255,255);background: rgb(0,0,0);">
-        <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="color: rgb(255,255,255);background: rgb(0,0,0);">
-            <div class="container"><a class="navbar-brand" href="#" style="font-size: 30px;">webmin</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navcol-1">
-                    <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="index.html" style="color: rgb(255,255,255);">Start</a></li>
-                    </ul>
-                </div>
+<body style="background: rgba(255,255,255,0);">
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="color: rgb(255,255,255);background: rgb(0,0,0);">
+        <div class="container"><a class="navbar-brand" href="#" style="font-size: 30px;">webmin</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="user.gohtml" style="color: rgb(255,255,255);">User</a></li>
+                    <li class="nav-item"><a class="nav-link" href="computer.gohtml" style="color: rgb(255,255,255);">Computer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.gohtml" style="color: rgb(255,255,255);">Start</a></li>
+                </ul>
             </div>
-        </nav>
-        <div class="container">
-            <form><input class="form-control" type="text" value="Username" style="margin-top: 2rem;">
-                <h6 style="margin-top: 1rem;">Account-Tools</h6>
-                <div class="d-flex flex-wrap">
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-1" name="UserForm"><label class="form-check-label" for="UserForm">Reset Password</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-7" name="UserForm"><label class="form-check-label" for="UserForm">Unlock Account</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-2" name="UserForm"><label class="form-check-label" for="UserForm">Show Permissions</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-15" name="UserForm"><label class="form-check-label" for="UserForm">Extend Expirationdate</label></div>
-                </div>
-                <h6 style="margin-top: 1rem;">BitLocker</h6>
-                <div class="d-flex flex-wrap">
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-6" name="UserForm"><label class="form-check-label" for="UserForm">Suspend BitLocker</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-5" name="UserForm"><label class="form-check-label" for="UserForm">Query BitLocker-RecoveryKey</label></div>
-                </div>
-                <h6 style="margin-top: 1rem;">DSM</h6>
-                <div class="d-flex flex-wrap">
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-3" name="UserForm"><label class="form-check-label" for="UserForm">Add DSM-Package(s)</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-4" name="UserForm"><label class="form-check-label" for="UserForm">Remove DSM-Package(s)</label></div>
-                </div><button class="btn btn-primary" type="submit" style="margin-top: 2rem;">Submit</button>
+        </div>
+    </nav>
+    <div style="color: rgb(255,255,255);background: rgb(0,0,0);">
+        <div class="container" style="margin-bottom: 5rem;">
+            <form style="color: rgb(255,255,255);"><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Username">
+                <div class="d-flex flex-wrap justify-content-xl-center">
+                    <div style="margin: 1rem;">
+                        <h4 class="text-center" style="margin-top: 1rem;">Account-Tools</h4>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-1" name="UserForm" value="ResetPW"><label class="form-check-label" for="UserForm">Reset Password</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-7" name="UserForm" value="UnlockAcc"><label class="form-check-label" for="UserForm">Unlock Account</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-2" name="UserForm" value="ShowPerm"><label class="form-check-label" for="UserForm">Show Permissions</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-15" name="UserForm" value="ExtExp"><label class="form-check-label" for="UserForm">Extend Expirationdate</label></div>
+                    </div>
+                    <div style="margin: 1rem;">
+                        <h4 class="text-center" style="margin-top: 1rem;">Misc</h4>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-6" name="UserForm" value="LastHost"><label class="form-check-label" for="UserForm">Last used Computer</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-5" name="UserForm" value="EnableJabber"><label class="form-check-label" for="UserForm">Activate Cisco Jabber</label></div>
+                    </div>
+                    <div style="margin: 1rem;">
+                        <h4 class="text-center" style="margin-top: 1rem;">VPN</h4>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-3" name="UserForm" value="AddVPN"><label class="form-check-label" for="UserForm">Add User to VPN-Users</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-4" name="UserForm" value="EmergencyVPN"><label class="form-check-label" for="UserForm">Assign VPN-Emergency-Account</label></div>
+                    </div>
+                </div><button class="btn btn-primary" type="submit" style="margin-top: 2rem;width: 100%;background: rgb(37,82,1);border-color: rgb(37,82,1);">Submit</button>
             </form>
-            <form><input class="form-control" type="text" value="Hostname" style="margin-top: 2rem;">
-                <h6 style="margin-top: 1rem;">Remote-Support</h6>
-                <div class="d-flex flex-wrap">
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-8" name="HostForm"><label class="form-check-label" for="HostForm">Start Remotesupport</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-9" name="HostForm"><label class="form-check-label" for="HostForm">Start RDP-Session</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-10" name="HostForm"><label class="form-check-label" for="HostForm">Check Windows Updates</label></div>
-                </div>
-                <h6 style="margin-top: 1rem;">BitLocker</h6>
-                <div class="d-flex flex-wrap">
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-11" name="HostForm"><label class="form-check-label" for="HostForm">Suspend BitLocker</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-12" name="HostForm"><label class="form-check-label" for="HostForm">Query BitLocker-RecoveryKey</label></div>
-                </div>
-                <h6 style="margin-top: 1rem;">DSM</h6>
-                <div class="d-flex flex-wrap">
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-13" name="HostForm"><label class="form-check-label" for="HostForm">Add DSM-Package(s)</label></div>
-                    <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-14" name="HostForm"><label class="form-check-label" for="HostForm">Remove DSM-Package(s)</label></div>
-                </div><button class="btn btn-primary" type="submit" style="margin-top: 2rem;">Submit</button>
+            <form><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Hostname">
+                <div class="d-flex flex-wrap justify-content-xl-center">
+                    <div style="margin: 1rem;">
+                        <h4 class="text-center" style="margin-top: 1rem;">Remote-Support</h4>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-16" name="HostForm" value="StartRS"><label class="form-check-label" for="UserForm">Start Remotesupport</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-17" name="HostForm" value="StartRDP"><label class="form-check-label" for="UserForm">Start RDP-Session</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-18" name="HostForm" value="ChkWU"><label class="form-check-label" for="UserForm">Check Windows Updates</label></div>
+                    </div>
+                    <div style="margin: 1rem;">
+                        <h4 class="text-center" style="margin-top: 1rem;">BitLocker</h4>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-20" name="HostForm" value="SuspBL"><label class="form-check-label" for="UserForm">Suspend BitLocker</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-21" name="HostForm" value="QuBL"><label class="form-check-label" for="UserForm">Query BitLocker-RecoveryKey</label></div>
+                    </div>
+                    <div style="margin: 1rem;">
+                        <h4 class="text-center" style="margin-top: 1rem;">DSM</h4>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-22" name="HostForm" value="AddDSM"><label class="form-check-label" for="UserForm">Add DSM-Package(s)</label></div>
+                        <div class="form-check" style="margin: 1rem;"><input class="form-check-input" type="radio" id="formCheck-23" name="HostForm" value="RmDSM"><label class="form-check-label" for="UserForm">Remove DSM-Package(s)</label></div>
+                    </div>
+                </div><button class="btn btn-primary" type="submit" style="margin-top: 2rem;width: 100%;background: rgb(37,82,1);border-color: rgb(37,82,1);">Submit Hostname</button>
             </form>
         </div>
     </div>
