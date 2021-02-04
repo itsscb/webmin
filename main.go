@@ -13,7 +13,6 @@ import (
 )
 
 var tpl *template.Template
-var em map[string]interface{}
 
 type incident struct {
 	HostName string
@@ -90,6 +89,7 @@ func init() {
 
 func main() {
 	//getuser("lwescbg", new())
+
 	http.HandleFunc("/", index)
 	http.HandleFunc("/assets/bootstrap/css/bootstrap.min.css", sfbs)
 	http.HandleFunc("/assets/css/Navigation-Clean.css", sfnv)
@@ -134,6 +134,8 @@ func index(w http.ResponseWriter, req *http.Request) {
 	*/
 
 	if user == "" {
+		em := make(map[string]interface{})
+		em["username"] = ""
 		err := tpl.ExecuteTemplate(w, "index.gohtml", em)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
@@ -162,6 +164,12 @@ func index(w http.ResponseWriter, req *http.Request) {
 	} else {
 		userdata["PasswordLastSet"] = "None"
 	}
+	if userdata["LastBadPasswordAttempt"] != nil {
+		userdata["LastBadPasswordAttempt"] = pt2str(userdata["LastBadPasswordAttempt"])
+		fmt.Println("\nLastBadPasswordAttempt:", userdata["LastBadPasswordAttempt"])
+	} else {
+		userdata["LastBadPasswordAttempt"] = "None"
+	}
 	if userdata["AccountExpirationDate"] != nil {
 		userdata["AccountExpirationDate"] = pt2str(userdata["AccountExpirationDate"])
 		fmt.Println("\nAccountExpirationDate:", userdata["AccountExpirationDate"])
@@ -180,6 +188,8 @@ func user(w http.ResponseWriter, req *http.Request) {
 	user := req.FormValue("username")
 
 	if user == "" {
+		em := make(map[string]interface{})
+		em["username"] = ""
 		err := tpl.ExecuteTemplate(w, "user.gohtml", em)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
@@ -203,6 +213,12 @@ func user(w http.ResponseWriter, req *http.Request) {
 	} else {
 		userdata["PasswordLastSet"] = "None"
 	}
+	if userdata["LastBadPasswordAttempt"] != nil {
+		userdata["LastBadPasswordAttempt"] = pt2str(userdata["LastBadPasswordAttempt"])
+		fmt.Println("\nLastBadPasswordAttempt:", userdata["LastBadPasswordAttempt"])
+	} else {
+		userdata["LastBadPasswordAttempt"] = "None"
+	}
 	if userdata["AccountExpirationDate"] != nil {
 		userdata["AccountExpirationDate"] = pt2str(userdata["AccountExpirationDate"])
 		fmt.Println("\nAccountExpirationDate:", userdata["AccountExpirationDate"])
@@ -215,3 +231,4 @@ func user(w http.ResponseWriter, req *http.Request) {
 		log.Fatalln(err)
 	}
 }
+
