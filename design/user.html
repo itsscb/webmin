@@ -23,7 +23,7 @@
         </div>
     </nav>
     <div class="container" style="color: rgb(255,255,255);margin-bottom: 5rem;">
-        <form style="color: rgb(255,255,255);"><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Username">
+        <form style="color: rgb(255,255,255);"><input class="form-control" type="text" style="margin-top: 2rem;" placeholder="Username" name="username">
             <div class="d-flex flex-wrap justify-content-xl-center">
                 <div style="margin: 1rem;">
                     <h4 class="text-center" style="margin-top: 1rem;">Account-Tools</h4>
@@ -48,49 +48,55 @@
             <li style="padding: 1rem;text-align: center;">
                 <div>
                     <h5>Name</h5>
-                    <p>Schulz, Benjamin</p>
+                    <p>{{ .DisplayName }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
                 <div>
                     <h5>E-Mail</h5>
-                    <p>benjamin.schulz@liebherr.com</p>
+                    <p>{{ .EmailAddress }}</p>
+                </div>
+            </li>
+            <li style="padding: 1rem;text-align: center;">
+                <div>
+                    <h5>Department</h5>
+                    <p>{{ .Department }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
                 <div>
                     <h5>Enabled</h5>
-                    <p>true</p>
+                    <p>{{ .Enabled }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
                 <div>
                     <h5>Account locked</h5>
-                    <p>false</p>
+                    <p>{{ .LockedOut }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
                 <div>
                     <h5>Last Logon</h5>
-                    <p>01.01.2021</p>
+                    <p>{{ .LastLogonDate }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
                 <div>
                     <h5>Password last set</h5>
-                    <p>01.01.2021</p>
+                    <p>{{ .PasswordLastSet }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
                 <div>
                     <h5>Expiration Date</h5>
-                    <p>none</p>
+                    <p>{{ .AccountExpirationDate }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
                 <div>
                     <h5>Home Directory</h5>
-                    <p>\\lwe.liebherr.i\dfs\users\lwescbg</p>
+                    <p>{{ .HomeDirectory }}</p>
                 </div>
             </li>
             <li style="padding: 1rem;text-align: center;">
