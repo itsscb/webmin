@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os/exec"
 	"strconv"
+	"strings"
 	"text/template"
 	"time"
 )
@@ -45,16 +46,20 @@ func (p *PowerShell) execute(args ...string) (stdOut string, stdErr string, err 
 	return
 }
 
-func pget(p *PowerShell, c string, q string, props string) map[string]interface{} {
-	stdOut, stdErr, err := p.execute(c, q, "-Properties", props, "|", "ConvertTo-Json")
+func pget(p *PowerShell, c string) string {
+	stdOut, stdErr, err := p.execute(c)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	if stdErr != "" {
 		fmt.Println(stdErr, stdOut)
 	}
+	return stdOut
+}
+
+func p2j(s string) map[string]interface{} {
 	resp := make(map[string]interface{})
-	err = json.Unmarshal([]byte(stdOut), &resp) //"{\"key1\":0,\"key2\":0}"), &b)
+	err := json.Unmarshal([]byte(s), &resp)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -88,8 +93,6 @@ func init() {
 }
 
 func main() {
-	//getuser("lwescbg", new())
-
 	http.HandleFunc("/", index)
 	http.HandleFunc("/assets/bootstrap/css/bootstrap.min.css", sfbs)
 	http.HandleFunc("/assets/css/Navigation-Clean.css", sfnv)
@@ -101,41 +104,14 @@ func main() {
 }
 
 func index(w http.ResponseWriter, req *http.Request) {
-
+	tf := false
 	posh := new()
 	user := req.FormValue("username")
-	/*
-		err := req.ParseForm()
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			log.Fatalln(err)
-		}
-
-		for key, values := range req.Form {
-			fmt.Println(key, values)
-			for _, value := range values {
-				fmt.Println(key, value)
-			}
-		}
-	*/
-	/*
-		rpw := req.FormValue("ResetPW")
-		if rpw == "on" {
-			fmt.Println("rpw", rpw)
-		} else {
-			fmt.Println("rpw off")
-		}
-		uacc := req.FormValue("UnlockAcc")
-		fmt.Println(uacc)
-		sprm := req.FormValue("ShowPrm")
-		fmt.Println(sprm)
-		exe := req.FormValue("ExtExp")
-		fmt.Println(exe)
-	*/
 
 	if user == "" {
 		em := make(map[string]interface{})
 		em["username"] = ""
+		em["hostname"] = ""
 		err := tpl.ExecuteTemplate(w, "index.gohtml", em)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
@@ -143,39 +119,86 @@ func index(w http.ResponseWriter, req *http.Request) {
 		}
 		return
 	}
-	/*
-		stdOut, stdErr, err := posh.execute("Test-Connection", "-Count", "1", "-Quiet", h)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		fmt.Println(stdErr, stdOut)
-	*/
-	userdata := pget(posh, "Get-ADUser", user, "DisplayName, Department, SamAccountName, Enabled, LockedOut, PasswordExpired, PasswordNeverExpires, PasswordNotRequired, CannotChangePassword, PasswordLastSet, LastBadPasswordAttempt, LastLogonDate, AccountExpirationDate, extensionAttribute13, EmailAddress, Homedirectory")
+
+	ud := pget(posh, "Get-ADUser "+user+" -Properties DisplayName, Department, SamAccountName, Enabled, LockedOut, PasswordExpired, PasswordNeverExpires, PasswordNotRequired, CannotChangePassword, PasswordLastSet, LastBadPasswordAttempt, LastLogonDate, AccountExpirationDate, extensionAttribute13, EmailAddress, Homedirectory | ConvertTo-Json")
+	userdata := p2j(ud)
 	userdata["username"] = user
+	userdata["vpnuser"] = pget(posh, "$t = Get-ADPrincipalGroupMembership "+user+" | Select-Object -Property Name | Where-Object { $_.Name -eq '.LWE-VPN-LWE_User' -or $_.Name -eq '.LWE-VPN-LWE_Admin' }; $t -ne $null")
 	if userdata["LastLogonDate"] != nil {
 		userdata["LastLogonDate"] = pt2str(userdata["LastLogonDate"])
-		fmt.Println("\nLastLogonDate:", userdata["LastLogonDate"])
 	} else {
 		userdata["LastLogonDate"] = "None"
 	}
 	if userdata["PasswordLastSet"] != nil {
 		userdata["PasswordLastSet"] = pt2str(userdata["PasswordLastSet"])
-		fmt.Println("\nPasswordLastSet:", userdata["PasswordLastSet"])
 	} else {
 		userdata["PasswordLastSet"] = "None"
 	}
 	if userdata["LastBadPasswordAttempt"] != nil {
 		userdata["LastBadPasswordAttempt"] = pt2str(userdata["LastBadPasswordAttempt"])
-		fmt.Println("\nLastBadPasswordAttempt:", userdata["LastBadPasswordAttempt"])
 	} else {
 		userdata["LastBadPasswordAttempt"] = "None"
 	}
 	if userdata["AccountExpirationDate"] != nil {
 		userdata["AccountExpirationDate"] = pt2str(userdata["AccountExpirationDate"])
-		fmt.Println("\nAccountExpirationDate:", userdata["AccountExpirationDate"])
 	} else {
 		userdata["AccountExpirationDate"] = "None"
 	}
+
+	uf := req.FormValue("UserForm")
+
+	switch uf {
+	case "ResetPW":
+		fmt.Printf("ResetPW")
+		userdata["response"] = pget(posh, "Set-ADAccountPassword -Reset -NewPassword (ConvertTo-SecureString -String 'Liebherr1!' -AsPlainText -Force) -Identity "+user)
+		userdata["command"] = "Reset Password"
+		tf = true
+	case "UnlockAcc":
+		fmt.Printf("UnlockAcc")
+		userdata["response"] = pget(posh, "Unlock-ADAccount -Identity "+user+"; $?")
+		userdata["command"] = "Unlock Account"
+		tf = true
+	case "ShowPerm":
+		fmt.Printf("ShowPerm")
+		groups := pget(posh, "Get-ADPrincipalGroupMembership "+user+" | Select-Object -Property Name | Sort-Object -Property Name #| ConvertTo-Json")
+		groups = strings.Replace(groups, "\n", "<br>", -1)
+		fmt.Printf(groups)
+		userdata["response"] = groups
+		userdata["command"] = "Show Permissions"
+	case "ExtExp":
+		fmt.Printf("ExtExp")
+		userdata["response"] = pget(posh, "Set-ADUser "+user+" -AccountExpirationDate (Get-Date).AddDays(14); $?")
+		userdata["command"] = "Extent Account Expirationdate"
+		tf = true
+	case "LastHost":
+		fmt.Printf("LastHost")
+		userdata["response"] = pget(posh, "Unlock-ADAccount -Identity "+user+"; $?")
+		userdata["command"] = "Get Last used Computer"
+	case "EnableJabber":
+		fmt.Printf("Enable Jabber")
+		userdata["response"] = exec.Command("\\\\lwesv0170\\itsm_tools\\jabber\\jabber.exe", user)
+		userdata["command"] = "Enable Cisco Jabber"
+		tf = true
+	case "AddVPN":
+		fmt.Printf("AddVPN")
+		userdata["response"] = pget(posh, "$u = Get-ADUser "+user+" -Properties * ; $g = Get-ADGroup '.LWE-VPN-LWE_User' ; Set-ADObject -Identity $g -Add @{member=$u.DistinguishedName}; $?")
+		userdata["command"] = "Add User to VPN-Group"
+		tf = true
+	case "EmergencyVPN":
+		fmt.Printf("EmergencyVPN")
+		userdata["response"] = pget(posh, "Unlock-ADAccount -Identity "+user)
+		userdata["command"] = "Assign Emergency-VPN"
+	}
+	if tf == true {
+		userdata["response"] = userdata["response"].(string)[:4]
+		if userdata["response"].(string) == "True" {
+			userdata["response"] = "Success"
+		} else {
+			userdata["response"] = "Failed"
+		}
+	}
+	//req.Method = "POST"
+	//http.Redirect(w, req, "/user", http.StatusSeeOther)
 	err := tpl.ExecuteTemplate(w, "user.gohtml", userdata) //incident{h, u, stdOut})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -184,12 +207,14 @@ func index(w http.ResponseWriter, req *http.Request) {
 }
 
 func user(w http.ResponseWriter, req *http.Request) {
+	tf := false
 	posh := new()
 	user := req.FormValue("username")
 
 	if user == "" {
 		em := make(map[string]interface{})
 		em["username"] = ""
+		em["hostname"] = ""
 		err := tpl.ExecuteTemplate(w, "user.gohtml", em)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
@@ -198,9 +223,10 @@ func user(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	fmt.Println("Getting Userdata of ", user, "...")
-	userdata := pget(posh, "Get-ADUser", user, "DisplayName, Department, SamAccountName, Enabled, LockedOut, PasswordExpired, PasswordLastSet, LastBadPasswordAttempt, LastLogonDate, AccountExpirationDate, extensionAttribute13, EmailAddress, Homedirectory")
+	ud := pget(posh, "Get-ADUser "+user+" -Properties DisplayName, Department, SamAccountName, Enabled, LockedOut, PasswordExpired, PasswordLastSet, LastBadPasswordAttempt, LastLogonDate, AccountExpirationDate, extensionAttribute13, EmailAddress, Homedirectory | ConvertTo-Json")
+	userdata := p2j(ud)
 	userdata["username"] = user
+	userdata["vpnuser"] = pget(posh, "$t = Get-ADPrincipalGroupMembership "+user+" | Select-Object -Property Name | Where-Object { $_.Name -eq '.LWE-VPN-LWE_User' -or $_.Name -eq '.LWE-VPN-LWE_Admin' }; $t -ne $null")
 	if userdata["LastLogonDate"] != nil {
 		userdata["LastLogonDate"] = pt2str(userdata["LastLogonDate"])
 		fmt.Println("\nLastLogonDate:", userdata["LastLogonDate"])
@@ -225,6 +251,59 @@ func user(w http.ResponseWriter, req *http.Request) {
 	} else {
 		userdata["AccountExpirationDate"] = "None"
 	}
+
+	uf := req.FormValue("UserForm")
+	switch uf {
+	case "ResetPW":
+		fmt.Printf("ResetPW")
+		userdata["response"] = pget(posh, "Set-ADAccountPassword -Reset -NewPassword (ConvertTo-SecureString -String 'Liebherr1!' -AsPlainText -Force) -Identity "+user)
+		userdata["command"] = "Reset Password"
+		tf = true
+	case "UnlockAcc":
+		fmt.Printf("UnlockAcc")
+		userdata["response"] = pget(posh, "Unlock-ADAccount -Identity "+user+"; $?")
+		userdata["command"] = "Unlock Account"
+		tf = true
+	case "ShowPerm":
+		fmt.Printf("ShowPerm")
+		groups := pget(posh, "Get-ADPrincipalGroupMembership "+user+" | Select-Object -Property Name | Sort-Object -Property Name #| ConvertTo-Json")
+		groups = strings.Replace(groups, "\n", "<br>", -1)
+		fmt.Printf(groups)
+		userdata["response"] = groups
+		userdata["command"] = "Show Permissions"
+	case "ExtExp":
+		fmt.Printf("ExtExp")
+		userdata["response"] = pget(posh, "Set-ADUser "+user+" -AccountExpirationDate (Get-Date).AddDays(14); $?")
+		userdata["command"] = "Extent Account Expirationdate"
+		tf = true
+	case "LastHost":
+		fmt.Printf("LastHost")
+		userdata["response"] = pget(posh, "Unlock-ADAccount -Identity "+user+"; $?")
+		userdata["command"] = "Get Last used Computer"
+	case "EnableJabber":
+		fmt.Printf("Enable Jabber")
+		userdata["response"] = exec.Command("\\\\lwesv0170\\itsm_tools\\jabber\\jabber.exe", user)
+		userdata["command"] = "Enable Cisco Jabber"
+		tf = true
+	case "AddVPN":
+		fmt.Printf("AddVPN")
+		userdata["response"] = pget(posh, "$u = Get-ADUser "+user+" -Properties * ; $g = Get-ADGroup '.LWE-VPN-LWE_User' ; Set-ADObject -Identity $g -Add @{member=$u.DistinguishedName}; $?")
+		userdata["command"] = "Add User to VPN-Group"
+		tf = true
+	case "EmergencyVPN":
+		fmt.Printf("EmergencyVPN")
+		userdata["response"] = pget(posh, "Unlock-ADAccount -Identity "+user)
+		userdata["command"] = "Assign Emergency-VPN"
+	}
+	if tf == true {
+		userdata["response"] = userdata["response"].(string)[:4]
+		if userdata["response"].(string) == "True" {
+			userdata["response"] = "Success"
+		} else {
+			userdata["response"] = "Failed"
+		}
+	}
+
 	err := tpl.ExecuteTemplate(w, "user.gohtml", userdata) //incident{h, u, stdOut})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
